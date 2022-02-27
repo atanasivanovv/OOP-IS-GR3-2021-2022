@@ -125,7 +125,7 @@ struct Car {
     Engine engine;
     Fuel fuel;
 
-    enterCar() {
+    void enterCar() {
         cout << "Enter car:";
         cin.ignore();
         cout << "Enter name:";
@@ -144,7 +144,7 @@ struct Car {
         avgFuelBurn = _avgFuelBurn;
     }
 
-    getFuel() {
+    void getFuel() {
         switch(fuel) {
             case Gasoline: {
                 cout << "Na benzin sme" << endl;

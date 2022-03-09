@@ -16,6 +16,55 @@ void writeStudents(Student students[], std::ofstream& out) {
     }    
 }
 
+void writeStudents(Student students[], const char* path) {
+    std::ofstream out;
+    out.open(path);
+
+    for (int i = 0; i < 3; i++) {
+        out << students[i].fn << " ";
+        out << students[i].name << '\n';
+        out << students[i].grade << '\n';
+    }  
+
+    out.close();
+}
+
+
+const int BUFFER_SIZE = 100;
+void readStudents(const char* path) {
+    std::ifstream in(path);
+    if (!in.is_open()) {
+        std::cout << "File is not open!" << std::endl;
+        return;
+    }
+
+    while (!in.eof()) {
+        char line[BUFFER_SIZE];
+        in.getline(line, BUFFER_SIZE);
+        std::cout << line << std::endl;
+    }
+
+    in.close();
+}
+
+/* 
+    if (in) -> in.good()
+    if (!in) -> in.bad() || in.fail() || in.eof()
+*/
+
+void readStudents(std::ifstream& in) {
+    if (!in.is_open()) {
+        std::cout << "File is not open!" << std::endl;
+        return;
+    }
+
+    while (!in.eof()) {
+        char line[BUFFER_SIZE];
+        in.getline(line, BUFFER_SIZE);
+        std::cout << line << std::endl;
+    }
+}
+
 int main() {
     Student nasko;
     nasko.fn = 71937;
@@ -33,12 +82,8 @@ int main() {
     strcpy(nasko3.name, "Nasko3");
 
     Student students[] = {nasko, nasko2, nasko3};
-    std::ofstream out;
-    out.open("students.txt");
-    writeStudents(students, out);
-
-    out.close();
-
-    // std::fstream file;
-    // file.open("students.txt", std::ios::out);
+    
+    // input/output
+    writeStudents(students, "students.txt");
+    readStudents("students.txt");
 }

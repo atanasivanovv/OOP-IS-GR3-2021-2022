@@ -10,6 +10,10 @@
 struct Student {
     int facNum; // -> 4 bytes
     char name[64]; // -> 64 bytes
+
+    void print() {
+        std::cout << facNum << " " << name << std::endl;
+    }
 };
 
 void writeStudents(const Student students[], const char* path) {
@@ -27,8 +31,21 @@ void writeStudents(const Student students[], const char* path) {
     out.close();
 }
 
-void readStudents(const char* path) {
-    // HOMEWORK :)
+void readStudents(const Student students[], const char* path) {
+    std::ifstream in(path, std::ios::binary);
+
+    if (!in.is_open() && !in) {
+        std::cout << "Cannot read from file" << std::endl;
+        return;
+    }
+
+    for (int i = 0; i < 3; i++) {
+        in.read((char*) &students[i], sizeof(Student));
+        std::cout << students[i].facNum << std::endl;
+        std::cout << students[i].name << std::endl;
+    }
+
+    in.close();
 }
 
 int main() {
@@ -41,4 +58,5 @@ int main() {
     strcpy(students[2].name, "Ivo");
 
     writeStudents(students, "students.bin");
+    readStudents(students, "students.bin");
 }

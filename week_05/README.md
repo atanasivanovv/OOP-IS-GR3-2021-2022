@@ -151,3 +151,51 @@ public:
 ```
 
 ## Как да ползваме .h и .cpp файлове
+
+Header file (.h) - в него пишем синтаксиса `ifndef,define,endif`. В него импортваме всички библиотеки, които искаме да бъдат ползвани за имплементацията на методите в .cpp файла.
+```c++
+// player.h
+
+#ifndef PLAYER_H
+#define PLAYER_H
+
+#include <cstring>
+#include ...
+#include ...
+
+class Player {
+  void method1();
+  void method2();
+  void method3();
+  ...
+  void methodN();
+};
+
+#endif
+```
+
+Cpp file (.cpp) - имплементация на методите
+
+```c++
+// player.cpp
+#include "player.h"
+
+void Player::method1() {
+
+}
+
+void Player::method2() {
+  
+}
+
+void Player::method3() {
+  
+}
+```
+
+Накрая в main.cpp импортваме **само cpp файла!** 
+P.S Това е така защото ползваме ifndef - endif при дефиниране на header и той изисква импорт на .cpp файла в main.
+
+```c++
+#include "player.cpp
+```

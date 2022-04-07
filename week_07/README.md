@@ -110,7 +110,92 @@ Move семантиката ни позволява да избягваме не
 Проблемът най-просто казано е следния - в повечето случаи когато искаме да вземем данните на някакво entity (class) и работим с динамична памет, ще трябва да заделяме памет **2 пъти**. Нека го покажем това с ръчно написан `String` :)
 
 ```c++
-    insert String here
+class String {
+private:
+    char* data;
+    int size;
+public:
+    String() {}
+
+    String(const char* str) {
+        std::cout << "Created";
+        this->size = strlen(str);
+        this->data = new char[this->size];
+        memcpy(this->data, str, this->size);
+    } 
+
+    String (const String& other) {
+        std::cout << "Copied";
+        this->size = other.size;
+        this->data = new char[this->size];
+        memcpy(this->data, other.data, this->size);
+    }
+
+    ~String() {
+        std::cout << "Destroyed" << std::endl;
+        delete[] this->data;
+    }
+
+    void print() {
+        for (int i = 0; i < this->size; i++) {
+            std::cout << this->data[i];
+        }
+
+        std::cout << std::endl;
+    }
+};
+```
+
+Нека имаме и `class Entity`, който "консумира" нашия стринг.
+
+```c++
+class Entity {
+private:
+    String name;
+public:
+    Entity(const String& _name) : name(_name) {}
+};;
+```
+
+Сигурно се чудите какво представлява ` : name(_name) `?
+ Това което се случва е, че изпълнявате copy constructor-a на вашата член данна **name** с параметъра, който се подали в Entity конструктора - **_name**. Има един много хубав плюс на тази инициализация - не ви се налага да пишете `operator=`, защото следния синтаксис нямаше да работи без такъв:
+
+ ```c++
+    Entity(const String& name) {
+        this->name = name;
+    }
+ ```
+
+Ще искаме да ползваме Entity в main по следния начин:
+
+```c++
+int main() {
+    Entity entity("Nasko");
+    // отдолу се вика като Entity entity(String("nasko"))
+}
+```
+
+Ще видите, че се принтира `Created, Copied, Destroyed` - проблема е в Copied. Ние НЕ искаме да заделяме памет в хийпа, един път в scope-a на main функцията
+
+
+
+Затова добавяме move constructor, който ще се изпълни на мястото на Copy - вместо да копира ще "премести" указателя към вече заделената памет за него.
+
+```c++
+Entity(String&& _name) : name((String&&)_name) {}
+```
+
+Тук изрично трябва да кастнете името, което подавате като temporary стойност, за да бъде извикан вашия move constructor.
+
+```c++
+String(String&& other) noexcept {
+        std::cout << "Moved" << std::endl;
+        this->size = other.size;
+        this->data = other.data;  // assigning the pointer!!!
+    
+        other.size = 0;
+        other.data = nullptr; // making other "hollow"
+}
 ```
 
 Какво се случва тук? Нека разгледаме ред по ред - задаваме size да ни е равен на предоставения `rvalue` или `temporary` - стойност която не сочи никъде в паметта.
@@ -121,13 +206,14 @@ Move семантиката ни позволява да избягваме не
 
 Следващите два реда са ключови (обърнете внимание на тях). Много е важно след като сме "превзели" данните на обекта `other` да ги изчистим от паметта, защото те вече не могат да бъдат достъпени по никакъв начин. Съответно трябва да занулим всяка една данна, която е била взета от нас при изпълнението на move constructor-а
 
-```c++
-String(String&& other) noexcept {
-        std::cout << "Moved" << std::endl;
-        this->size = other.size;
-        this->data = other.data;  // assigning the pointer!!!
-    
-        other.size = 0;
-        other.data = nullptr; // making other "hollow"
-    }
+Ако сега изпълните програмата ще видите
+
 ```
+Created
+Moved
+Destroyed
+nasko
+Destroyed
+```
+
+Причината поради която има 2 пъти destroyed е, че първия destroy е за вашето temporary, от което сте "взели" данните, след това принтирате и чак след това унищожавате `Entity` обекта.

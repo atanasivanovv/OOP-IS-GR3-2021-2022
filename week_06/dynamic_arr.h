@@ -19,11 +19,15 @@ public:
     ~DynamicArray();
 
     int getSize() const;
+    int getCapacity() const;
     int getAtIndex(const int index) const;
     // void setAtIndex(const int index, const int element);
     void print() const;
 
     void push_back(const int& element);
+    void push_front(const int& element);
+    void pop_front();
+    void pop_back();
 };
 
 #endif

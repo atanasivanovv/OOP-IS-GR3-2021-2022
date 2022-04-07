@@ -60,6 +60,10 @@ int DynamicArray::getSize() const {
     return this->size;
 }
 
+int DynamicArray::getCapacity() const {
+    return this->capacity;
+}
+
 int DynamicArray::getAtIndex(const int index) const {
     if (index < size) {
         return this->data[index];
@@ -69,13 +73,51 @@ int DynamicArray::getAtIndex(const int index) const {
 }
 
 void DynamicArray::push_back(const int& element) {
-    // first check is not needed if we have it in resize()
-    if (this->size >= capacity || this->data == nullptr) {
-        this->resize();    
-    }
+    this->resize(); // resizes only if size is bigger than capacity 
     
     this->data[this->size] = element;
     this->size++;
+}
+
+void DynamicArray::push_front(const int& element) {
+    this->resize();
+
+    int* bigger = new int[this->size + 1];
+    for (int i = 0; i < this->size; i++) {
+        bigger[i+1] = this->data[i];
+    }
+
+    this->size++;
+    bigger[0] = element;
+    this->erase();
+    this->data = bigger;
+}
+
+void DynamicArray::pop_front() {
+    int* smaller = new int[this->size - 1];
+
+    for (int i = 0; i < this->size - 1; i++) {
+        smaller[i] = data[i+1];
+    }
+
+    this->size--;
+    this->erase();
+    this->data = smaller;
+}
+
+void DynamicArray::pop_back() {
+    if (this->size > 0) 
+        this->size--;
+
+    // this->size--;
+    // int* smaller = new int[this->size];
+
+    // for (int i = 0; i < this->size; i++) {
+    //     smaller[i] = this->data[i];
+    // }
+
+    // this->erase();
+    // this->data = smaller;
 }
 
 void DynamicArray::print() const {

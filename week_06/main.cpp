@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cstring>
-#include "dynamic_arr.cpp"
+#include "dynamic_arr.h"
  
 using namespace std;
 

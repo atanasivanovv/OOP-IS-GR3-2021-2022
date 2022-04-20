@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 
+// TODO: FIX THIS
 class Point
 {
 private:

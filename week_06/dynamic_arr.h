@@ -16,6 +16,12 @@ public:
     DynamicArray();
     DynamicArray(const DynamicArray& other);
     DynamicArray& operator=(const DynamicArray& other);
+    bool operator==(const DynamicArray& other);
+    bool operator!=(const DynamicArray& other);
+    const int& operator[](int index) const; 
+    int& operator[](int index); 
+    DynamicArray operator+(const DynamicArray& other);
+
     ~DynamicArray();
 
     int getSize() const;

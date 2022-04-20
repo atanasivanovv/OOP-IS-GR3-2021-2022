@@ -54,16 +54,24 @@ int main() {
     // DYNAMIC ARRAY 
 
     std::cout << std::endl;
-    DynamicArray* arr = new DynamicArray();
-    arr->push_back(2);
-    arr->push_back(5);
-    arr->push_back(6);
+    DynamicArray arr;
+    arr.push_back(2);
+    arr.push_back(5);
+    arr.push_back(6);
 
-    arr->print();
-    arr->pop_back();
-    arr->pop_back();
-    arr->print();
+    // arr.print();
+    // arr.pop_back();
+    // arr.pop_back();
+    // arr.print();
 
-    arr->print();
+    const int first = arr[0];
+    int second = arr[1];
+    arr.print();
+    std::cout << arr[0] << std::endl;
+    std::cout << arr[1] << std::endl;
+    std::cout << arr[2] << std::endl;
 
+    // dyn arr first
+    // dyn arr second
+    // RESULT = first + second;
 }

@@ -52,6 +52,55 @@ DynamicArray& DynamicArray::operator=(const DynamicArray& other) {
     return *this;
 }
 
+bool DynamicArray::operator==(const DynamicArray& other) {
+    if (this->size != other.getSize()) {
+        return false;
+    }
+
+    for (int i = 0; i < this->size; i++) {
+        if (this->data[i] != other.data[i]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool DynamicArray::operator!=(const DynamicArray& other) {
+    return !(this == &other);
+}
+
+const int& DynamicArray::operator[](int i) const {
+    return this->data[i];
+} 
+
+int& DynamicArray::operator[](int i) {
+    return this->data[i];
+} 
+
+// [1,2,3] + [4,5,6] = [1,2,3,4,5,6] - this one
+// [1,2,3] + [4,5,6] = [5,7,9]
+// [1,2,3,4] + [4,5,6] 
+DynamicArray DynamicArray::operator+(const DynamicArray& other) {
+    DynamicArray result; // size 0, capacity = 8
+
+    result.capacity = this->capacity + other.capacity; 
+    result.data = new int[result.capacity]; // capacity = 15
+
+    // [_, _, _, _, _, _, _, _]
+    for (int i = 0; i < this->size; i++) {
+        result[i] = this->data[i];   
+    }
+
+    // [1,2,3,4, _, _, _, _]
+    for (int i = 0; i < other.size; i++) {
+        result[this->size + i] = other[i];
+    }
+
+    result.size = this->size + other.size;
+    return result;
+}
+
 DynamicArray::~DynamicArray() {
     this->erase();
 }

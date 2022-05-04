@@ -15,7 +15,7 @@ public:
   B()  { cout << "B's constructor called" << endl; }
 };
   
-class C: public B, public A  // Note the order
+class C: public B, public A  // обърнете внимание на реда
 {
 public:
   C()  { cout << "C's constructor called" << endl; }

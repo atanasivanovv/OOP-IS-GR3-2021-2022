@@ -45,7 +45,7 @@ class Base
     // Data members of class
 public:
     // Pure Virtual Function
-    virtual void show() 0;
+    virtual void show() = 0;
     
 
    /* Other members */
@@ -204,7 +204,7 @@ class Base
 {
 	int x;
 	public:
-	## virtual void show() 0;
+	virtual void show() = 0;
 	
     int getX() { return x; }
 };
